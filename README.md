@@ -6,7 +6,7 @@ Mohamed bin Zayed University of Artificial Intelligence
 Official repository for the AgroGround paper (arXiv link coming soon).
 
 **Code, annotations, taxonomy, and evaluation scripts will be released here.**
-The annotations are keyed to source-dataset image identifiers; no source images are redistributed.
+The annotations are keyed to source-dataset image identifiers, no source images are redistributed.
 
 ## Coming soon
 - Annotation pipeline and audit scripts
