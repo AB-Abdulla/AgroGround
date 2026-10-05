@@ -1,0 +1,67 @@
+#!/bin/bash
+# AgroGround GRPO training (main run): two GPUs, GSPO loss, composite grounded reward. Mirrors the EGM grounding recipe (grounding_qwen.sh).
+set -x
+export RAY_TMPDIR=./ray_tmp HYDRA_FULL_ERROR=1 CUDA_VISIBLE_DEVICES=2,3
+cd ./verl
+python3 -m verl.trainer.main_ppo \
+    algorithm.adv_estimator=grpo \
+    algorithm.use_kl_in_reward=False \
+    data.train_files=./work/rl/train_grounding.parquet \
+    data.val_files=./work/rl/val_grounding.parquet \
+    data.train_batch_size=128 \
+    data.max_prompt_length=1024 \
+    data.max_response_length=512 \
+    data.filter_overlong_prompts=True \
+    data.truncation=error \
+    data.image_key=images \
+    actor_rollout_ref.model.path=./weights/agroground-2b-c2v2-merged \
+    actor_rollout_ref.model.use_remove_padding=False \
+    +actor_rollout_ref.model.override_config.attn_implementation=sdpa \
+    actor_rollout_ref.model.enable_gradient_checkpointing=True \
+    actor_rollout_ref.actor.optim.lr=3e-6 \
+    actor_rollout_ref.actor.optim.lr_warmup_steps=10 \
+    actor_rollout_ref.actor.ppo_mini_batch_size=128 \
+    actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=4 \
+    actor_rollout_ref.actor.use_dynamic_bsz=False \
+    actor_rollout_ref.actor.ppo_max_token_len_per_gpu=6144 \
+    actor_rollout_ref.actor.use_kl_loss=True \
+    actor_rollout_ref.actor.kl_loss_coef=0.005 \
+    actor_rollout_ref.actor.kl_loss_type=low_var_kl \
+    actor_rollout_ref.actor.entropy_coeff=0 \
+    actor_rollout_ref.actor.entropy_from_logits_with_chunking=True \
+    actor_rollout_ref.actor.entropy_checkpointing=True \
+    actor_rollout_ref.ref.entropy_from_logits_with_chunking=True \
+    actor_rollout_ref.ref.entropy_checkpointing=True \
+    actor_rollout_ref.actor.policy_loss.loss_mode=gspo \
+    actor_rollout_ref.actor.fsdp_config.param_offload=True \
+    actor_rollout_ref.actor.fsdp_config.optimizer_offload=True \
+    actor_rollout_ref.rollout.name=vllm \
+    actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
+    actor_rollout_ref.rollout.n=8 \
+    actor_rollout_ref.rollout.temperature=0.7 \
+    actor_rollout_ref.rollout.top_p=0.9 \
+    actor_rollout_ref.rollout.top_k=50 \
+    actor_rollout_ref.rollout.dtype=bfloat16 \
+    actor_rollout_ref.rollout.gpu_memory_utilization=0.4 \
+    actor_rollout_ref.rollout.enable_chunked_prefill=True \
+    actor_rollout_ref.rollout.max_num_batched_tokens=4096 \
+    actor_rollout_ref.rollout.enforce_eager=False \
+    actor_rollout_ref.rollout.free_cache_engine=True \
+    actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=4 \
+    actor_rollout_ref.ref.fsdp_config.param_offload=True \
+    actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=4 \
+    custom_reward_function.path=../configs/rl/agroground_reward.py \
+    custom_reward_function.name=compute_score \
+    trainer.critic_warmup=0 \
+    trainer.logger='["console"]' \
+    trainer.project_name=agroground_rl \
+    trainer.experiment_name=grpo_c2v2_2gpu \
+    trainer.n_gpus_per_node=2 \
+    trainer.nnodes=1 \
+    trainer.save_freq=10 \
+    trainer.test_freq=10 \
+    trainer.max_actor_ckpt_to_keep=2 \
+    trainer.total_epochs=2 \
+    trainer.val_before_train=True \
+    trainer.log_val_generations=4 \
+    trainer.default_local_dir=./work/rl/ckpt/grpo_c2v2_2gpu
