@@ -15,7 +15,7 @@ disjoint from the training data by file path and by perceptual hash (two v4 imag
 
 This repository holds the code, the taxonomy, the configurations and the audit material.
 The annotations, the prediction files and the contamination flags are hosted on Zenodo
-(DOI to be added), partitioned by source with per-shard licenses, so that each shard
+(https://doi.org/10.5281/zenodo.23149180), partitioned by source with per-shard licenses, so that each shard
 carries the license of its source. No source images and no question-answer text are redistributed:
 every annotation is keyed to the source dataset's own identifiers (see "Identifiers"), and
 users obtain the images from the original releases.
