@@ -2,7 +2,7 @@
 
 Abdulla Alshehhi, Zongyan Han, Rao Anwer
 
-Paper: [arXiv link to be added] (under review)
+Paper: https://arxiv.org/abs/2610.04425 (under review)
 
 AgroGround is a large-scale dataset and benchmark for grounded agricultural recognition. The task is to identify plant diseases and other agricultural targets and to localize the image regions that show them, both at lesion level and at whole-leaf or whole-plant level, and to return an empty result when the queried target is absent. The training corpus has 794,850 instruction examples over 615,485 groundable samples from eight public agricultural VQA datasets and was built by an automatic annotation pipeline. The benchmark has 1,480 images (508 lesion-level, 467 object-level, 505 healthy). It was verified by a human annotator over four rounds and does not share any file path or perceptual hash with the training data. Two of the v4 images failed a check made after submission and are withdrawn in v4.1 (see Errata, item 4).
 
@@ -187,11 +187,19 @@ Running `score.py` on the released files reproduces every per-model number in th
 ## Source datasets
 
 CDDM, LeafNet and LeafBench, MIRAGE, AgroMind, AgroCoT, AgroBench and AgMMU. Please cite the
-source datasets when using the corresponding shards their licenses are listed in the paper's
+source datasets when using the corresponding shards. Their licenses are listed in the paper's
 licensing appendix and repeated on the Zenodo record.
 
 ## Citation
 
 ```
-[BibTeX to be added after the arXiv posting]
+@misc{alshehhi2026agroground,
+  title={AgroGround: Multi-Granularity Grounded Recognition in Agriculture},
+  author={Alshehhi, Abdulla and Han, Zongyan and Anwer, Rao},
+  year={2026},
+  eprint={2610.04425},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2610.04425}
+}
 ```
