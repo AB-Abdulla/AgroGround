@@ -2,7 +2,7 @@
 
 Abdulla Alshehhi, Zongyan Han, Rao Anwer
 
-Paper: https://arxiv.org/abs/2610.04425 (under review)
+Paper: https://arxiv.org/abs/2610.04425
 
 AgroGround is a large-scale dataset and benchmark for grounded agricultural recognition. The task is to identify plant diseases and other agricultural targets and to localize the image regions that show them, both at lesion level and at whole-leaf or whole-plant level, and to return an empty result when the queried target is absent. The training corpus has 794,850 instruction examples over 615,485 groundable samples from eight public agricultural VQA datasets and was built by an automatic annotation pipeline. The benchmark has 1,480 images (508 lesion-level, 467 object-level, 505 healthy). It was verified by a human annotator over four rounds and does not share any file path or perceptual hash with the training data. Two of the v4 images failed a check made after submission and are withdrawn in v4.1 (see Errata, item 4).
 
